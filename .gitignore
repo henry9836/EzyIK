@@ -2,7 +2,7 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
-Project/IKPlugin/IKPlugin/[Ll]ibrary/
+Project/IKPlugin/[Ll]ibrary/
 Project/IKPlugin/[Tt]emp/
 Project/IKPlugin/[Oo]bj/
 Project/IKPlugin/[Bb]uild/
