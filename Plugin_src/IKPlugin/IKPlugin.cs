@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HenryIK
@@ -6,16 +7,15 @@ namespace HenryIK
     public class IKPlugin
     {
 
-        struct BoneNode
+        public struct BoneNode
         {
-
             public GameObject node;
             public Transform nodeTransform;
             public Transform parentTransform;
             public float initalDistanceFromParent;
             public bool isRootNode;
 
-            public BoneNode(GameObject _node)
+            public BoneNode(ref GameObject _node)
             {
                 node = _node;
                 nodeTransform = node.transform;
@@ -33,6 +33,12 @@ namespace HenryIK
                     isRootNode = true;
                 }
             }
+        }
+
+        //Move Bones Towards target
+        public void IKStep(ref List<BoneNode> boneNodes)
+        {
+            UnityEngine.Debug.Log($"Hello I am reporting that I have {boneNodes.Count} nodes");
         }
 
         public static void Test()
