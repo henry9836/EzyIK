@@ -12,6 +12,8 @@ namespace HenryIK
             public GameObject node;
             public Transform nodeTransform;
             public Transform parentTransform;
+            public Vector3 startDir;
+            public Quaternion startRot;
             public float initalDistanceFromParent;
             public bool isRootNode;
             public float totalChainDistance;
@@ -25,6 +27,7 @@ namespace HenryIK
                 isRootNode = false;
                 totalChainDistance = 0.0f;
                 totalChainDistanceSquared = 0.0f;
+
                 //If we have a parent and have not gone past our max depth
                 if (node.transform.parent && (currentDepth < maxDepth || maxDepth < 0))
                 {
@@ -90,7 +93,7 @@ namespace HenryIK
         }
 
         //Move Bones Towards target
-        public static void IKStep(ref List<BoneNode> boneNodes, ref Transform target, ref Transform bendTarget, ref bool shouldBend)
+        public static void IKStep(ref List<BoneNode> boneNodes, ref Transform target, ref Transform bendTarget, ref bool shouldBend, ref int solverIterations, ref float solvedDistanceThreshold)
         {
             UnityEngine.Debug.Log($"Hello I am reporting that I have {boneNodes.Count} nodes");
 
@@ -103,6 +106,7 @@ namespace HenryIK
             //===============
             // BEGIN CALC
             //===============
+            //Based on the FABRIK algorithm
 
             //If it is further than we can reach (using squared is faster)
             if ((target.position - boneNodes[boneNodes.Count - 1].nodeTransform.position).sqrMagnitude >= boneNodes[0].totalChainDistanceSquared)
@@ -113,10 +117,50 @@ namespace HenryIK
                 //Set positions along a line according to the target's direction from our root node (do not move the root node)
                 for (int i = boneNodes.Count - 2; i > -1; i--)
                 {
-                    Debug.Log($"{i}");
                     boneNodes[i].nodeTransform.position = boneNodes[i + 1].nodeTransform.position + dir * boneNodes[i].initalDistanceFromParent;
                 }
 
+            }
+
+            //If it is within our reach
+            else
+            {
+                float solvedSqrThreshold = solvedDistanceThreshold * solvedDistanceThreshold;
+
+                //For each solver iteration
+                for (int i = 0; i < solverIterations; i++)
+                {
+                    //Are close enough to our target?
+                    if ((boneNodes[0].nodeTransform.position - target.position).sqrMagnitude < solvedSqrThreshold)
+                    {
+                        break;
+                    }
+
+                    //Backwards check (starts from leaf and goes to root) we can ignore moving the root bone so that it stays unaffected
+                    for (int j = 0; j < boneNodes.Count - 1; j++)
+                    {
+                        //Debug.Log($"Back {j}");
+                        //Set leaf node ontop of target
+                        if (j == 0)
+                        {
+                            boneNodes[0].nodeTransform.position = target.position;
+                        }
+                        //Look at previous node and move towards it according to our distance
+                        else
+                        {
+                            boneNodes[j].nodeTransform.position = boneNodes[j - 1].nodeTransform.position + (boneNodes[j].nodeTransform.position - boneNodes[j - 1].nodeTransform.position).normalized * boneNodes[j - 1].initalDistanceFromParent;
+                        }
+                    }
+
+                    //Forwards check (starts from root and goes to leaf)
+                    for (int j = boneNodes.Count - 2; j > -1; j--)
+                    {
+                        Debug.Log($"Front {j}");
+                        //Look at node in front of us and move according to our distance
+                        boneNodes[j].nodeTransform.position = boneNodes[j + 1].nodeTransform.position + (boneNodes[j].nodeTransform.position - boneNodes[j + 1].nodeTransform.position).normalized * boneNodes[j].initalDistanceFromParent;
+                    }
+
+                }
             }
 
             //===============

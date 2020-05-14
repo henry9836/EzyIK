@@ -14,6 +14,8 @@ public class EzyIK : MonoBehaviour
     public bool useBendTarget = false;
     //How far to search for bones if below 0 then search till we cannot find any more objects
     public int maxDepthSearch = -1;
+    public int solverIterations = 5;
+    public float solvedDistanceThreshold = 0.001f;
 
     [Range(0.1f, 5.0f)]
     public float visualiserScale = 0.5f;
@@ -28,7 +30,7 @@ public class EzyIK : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        IKPlugin.IKStep(ref bones, ref target, ref bendTarget, ref useBendTarget);
+        IKPlugin.IKStep(ref bones, ref target, ref bendTarget, ref useBendTarget, ref solverIterations, ref solvedDistanceThreshold);
     }
 
     //Draw In Editor
