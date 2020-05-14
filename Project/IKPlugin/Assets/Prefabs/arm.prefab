@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3917138000729030747}
-  - component: {fileID: 5296926204394480876}
+  - component: {fileID: 2986872507264625504}
   m_Layer: 0
   m_Name: Bone.003
   m_TagString: Untagged
@@ -63,7 +63,7 @@ Transform:
   m_Father: {fileID: 1409305950540473172}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5296926204394480876
+--- !u!114 &2986872507264625504
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -75,6 +75,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba94c184b1486694b95667905bff52c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxDepthSearch: 1
+  visualiserScale: 0.5
 --- !u!1 &3101350673628636355
 GameObject:
   m_ObjectHideFlags: 0
