@@ -51,11 +51,22 @@ namespace HenryIK
 
         public class BoneStructure
         {
-            public List<BoneNode> boneNodes;
+            
+            public List<BoneNode> boneNodes = new List<BoneNode>();
             public Quaternion startTargetRot;
             public Transform rootNode;
-            public float structureLength;
+            public Transform target;
+            public float totalChainDistanceSquared;
+            public float arriveThreshold;
             public int maxDepth;
+            public int maxSolveIterations = 5;
+
+            //Create a bonestructure
+            public BoneStructure(ref GameObject startBone, ref int maxDepth, ref Transform target)
+            {
+                //Init here
+
+            }
         }
 
 
