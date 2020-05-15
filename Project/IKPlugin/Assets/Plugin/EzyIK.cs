@@ -41,7 +41,7 @@ public class EzyIK : MonoBehaviour
     }
 
     //Draw In Editor
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
         for (int i = 0; i < bones.Count; i++)
