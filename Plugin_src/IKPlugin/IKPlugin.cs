@@ -21,31 +21,32 @@ namespace HenryIK
             public float totalChainDistanceSquared;
 
             //If we have left the bone section do not go any further upwards
-            public BoneNode(ref GameObject _node, ref int maxDepth, ref int currentDepth, ref Transform targetObj)
+            public BoneNode(ref GameObject _node)
             {
                 node = _node;
                 nodeTransform = node.transform;
-                isRootNode = false;
-                totalChainDistance = 0.0f;
-                totalChainDistanceSquared = 0.0f;
 
-                startDir = targetObj.position - nodeTransform.position;
-                startRotTarget = targetObj.rotation;
-                startRot = nodeTransform.rotation;
+                //isRootNode = false;
+                //totalChainDistance = 0.0f;
+                //totalChainDistanceSquared = 0.0f;
 
-                //If we have a parent and have not gone past our max depth
-                if (node.transform.parent && (currentDepth < maxDepth || maxDepth < 0))
-                {
-                    parentTransform = node.transform.parent.transform;
-                    initalDistanceFromParent = Vector3.Distance(nodeTransform.position, parentTransform.position);
-                    currentDepth++; 
-                }
-                else
-                {
-                    parentTransform = null;
-                    initalDistanceFromParent = 0.0f;
-                    isRootNode = true;
-                }
+                //startDir = targetObj.position - nodeTransform.position;
+                //startRotTarget = targetObj.rotation;
+                //startRot = nodeTransform.rotation;
+
+                ////If we have a parent and have not gone past our max depth
+                //if (node.transform.parent && (currentDepth < maxDepth || maxDepth < 0))
+                //{
+                //    parentTransform = node.transform.parent.transform;
+                //    initalDistanceFromParent = Vector3.Distance(nodeTransform.position, parentTransform.position);
+                //    currentDepth++; 
+                //}
+                //else
+                //{
+                //    parentTransform = null;
+                //    initalDistanceFromParent = 0.0f;
+                //    isRootNode = true;
+                //}
             }
         }
 
@@ -58,13 +59,45 @@ namespace HenryIK
             public Transform target;
             public float totalChainDistanceSquared;
             public float arriveThreshold;
-            public int maxDepth;
+            public int maxDepth = -1;
             public int maxSolveIterations = 5;
 
             //Create a bonestructure
             public BoneStructure(ref GameObject startBone, ref int maxDepth, ref Transform target)
             {
                 //Init here
+                int currentDepth = 0;
+                Transform tmpRoot = startBone.transform;
+
+                //While we haven't found the root node
+                while (rootNode == null)
+                {
+                    //Append to our list of bone nodes
+                    var tmpNode = tmpRoot.gameObject; 
+                    boneNodes.Add(new BoneNode(ref tmpNode));
+
+                    //Go up the chain until we find the root node or reach our max depth search
+                    if (tmpRoot.parent == null || currentDepth >= maxDepth)
+                    {
+                        rootNode = tmpRoot;
+                        break;
+                    }
+                    tmpRoot = tmpRoot.parent;
+                    currentDepth++;
+                }
+
+                //Invert our list of bones for FABIK
+                boneNodes.Reverse();
+
+                //Get the stating target rotation
+                startTargetRot = Quaternion.Inverse(target.rotation) * rootNode.rotation;
+
+                //Set up extra infomation now that we now details about our root and target nodes
+                for (int i = boneNodes.Count - 1; i > -1; i--)
+                {
+
+                }
+
 
             }
         }
