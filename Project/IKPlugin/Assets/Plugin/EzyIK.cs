@@ -22,9 +22,16 @@ public class EzyIK : MonoBehaviour
 
     void Awake()
     {
-        GameObject me = this.gameObject;
-        bones = IKPlugin.Init(ref me, ref maxDepthSearch);
-        me = null;
+        if (target)
+        {
+            GameObject me = this.gameObject;
+            bones = IKPlugin.Init(ref me, ref maxDepthSearch, ref target);
+            me = null;
+        }
+        else
+        {
+            Debug.LogError($"No target set for {gameObject.name} cannot start IK System");
+        }
     }
 
     // Update is called once per frame

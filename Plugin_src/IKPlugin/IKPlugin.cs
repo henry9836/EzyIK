@@ -14,19 +14,24 @@ namespace HenryIK
             public Transform parentTransform;
             public Vector3 startDir;
             public Quaternion startRot;
+            public Quaternion startRotTarget;
             public float initalDistanceFromParent;
             public bool isRootNode;
             public float totalChainDistance;
             public float totalChainDistanceSquared;
 
             //If we have left the bone section do not go any further upwards
-            public BoneNode(ref GameObject _node, ref int maxDepth, ref int currentDepth)
+            public BoneNode(ref GameObject _node, ref int maxDepth, ref int currentDepth, ref Transform targetObj)
             {
                 node = _node;
                 nodeTransform = node.transform;
                 isRootNode = false;
                 totalChainDistance = 0.0f;
                 totalChainDistanceSquared = 0.0f;
+
+                startDir = targetObj.position - nodeTransform.position;
+                startRotTarget = targetObj.rotation;
+                startRot = nodeTransform.rotation;
 
                 //If we have a parent and have not gone past our max depth
                 if (node.transform.parent && (currentDepth < maxDepth || maxDepth < 0))
@@ -45,14 +50,14 @@ namespace HenryIK
         }
 
         //Initaliser
-        public static List<BoneNode> Init(ref GameObject startBone, ref int maxDepth)
+        public static List<BoneNode> Init(ref GameObject startBone, ref int maxDepth, ref Transform target)
         {
             //Init vars
             List<BoneNode> bones = new List<BoneNode>();
             int currentDepth = 0;
 
             //Add first bone
-            bones.Add(new BoneNode(ref startBone, ref maxDepth, ref currentDepth));
+            bones.Add(new BoneNode(ref startBone, ref maxDepth, ref currentDepth, ref target));
             
             //Find all bones
             //While we haven't found the rootnode
@@ -60,15 +65,16 @@ namespace HenryIK
             {
                 //Go up the chain
                 var tmp = bones[bones.Count - 1].node.transform.parent.gameObject;
+                var tmpTransform = tmp.transform;
                 //Add new bone
                 if (maxDepth < 0)
                 {
-                    bones.Add(new BoneNode(ref tmp, ref maxDepth, ref currentDepth));
+                    bones.Add(new BoneNode(ref tmp, ref maxDepth, ref currentDepth, ref tmpTransform));
                 }
                 //We have a limit to how far we go
                 else if (currentDepth <= maxDepth)
                 {
-                    bones.Add(new BoneNode(ref tmp, ref maxDepth, ref currentDepth));
+                    bones.Add(new BoneNode(ref tmp, ref maxDepth, ref currentDepth, ref tmpTransform));
                 }
                 //Exit while loop
                 else
@@ -107,6 +113,17 @@ namespace HenryIK
             // BEGIN CALC
             //===============
             //Based on the FABRIK algorithm
+
+            //FIND ROTATION DIFF
+
+            Quaternion rootRot = Quaternion.identity;
+            if (boneNodes[boneNodes.Count - 1].nodeTransform.parent != null)
+            {
+                rootRot = boneNodes[boneNodes.Count - 1].nodeTransform.parent.rotation;
+            }
+            Quaternion rootRotDiff = rootRot * Quaternion.Inverse(rootRot);
+
+            //MOVEMENT
 
             //If it is further than we can reach (using squared is faster)
             if ((target.position - boneNodes[boneNodes.Count - 1].nodeTransform.position).sqrMagnitude >= boneNodes[0].totalChainDistanceSquared)
@@ -155,11 +172,28 @@ namespace HenryIK
                     //Forwards check (starts from root and goes to leaf)
                     for (int j = boneNodes.Count - 2; j > -1; j--)
                     {
-                        Debug.Log($"Front {j}");
                         //Look at node in front of us and move according to our distance
                         boneNodes[j].nodeTransform.position = boneNodes[j + 1].nodeTransform.position + (boneNodes[j].nodeTransform.position - boneNodes[j + 1].nodeTransform.position).normalized * boneNodes[j].initalDistanceFromParent;
                     }
 
+                }
+            }
+
+            //UPDATE ROTATIONS
+            for (int i = boneNodes.Count - 1; i > -1; i--)
+            {
+
+
+                //If we are effecting the leaf node
+                if (i == 0)
+                {
+                    Debug.Log("Rotating the leaf...");
+                    //boneNodes[i].nodeTransform.rotation = boneNodes[boneNodes.Count - 1].nodeTransform.rotation * (Quaternion.Inverse(target.rotation) * boneNodes[i].startRotTarget * Quaternion.Inverse(boneNodes[i].startRot));
+                }
+                //If we are effecting the other nodes
+                else
+                {
+                    //boneNodes[i].nodeTransform.rotation = boneNodes[boneNodes.Count - 1].nodeTransform.rotation * (Quaternion.FromToRotation(boneNodes[i].startDir, boneNodes[i - 1].nodeTransform.position - boneNodes[i].nodeTransform.position) * Quaternion.Inverse(boneNodes[i].startRot));
                 }
             }
 
