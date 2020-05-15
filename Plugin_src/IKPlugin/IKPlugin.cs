@@ -49,6 +49,16 @@ namespace HenryIK
             }
         }
 
+        public class BoneStructure
+        {
+            public List<BoneNode> boneNodes;
+            public Quaternion startTargetRot;
+            public Transform rootNode;
+            public float structureLength;
+            public int maxDepth;
+        }
+
+
         //Initaliser
         public static List<BoneNode> Init(ref GameObject startBone, ref int maxDepth, ref Transform target)
         {
@@ -204,9 +214,5 @@ namespace HenryIK
 
         }
 
-        public static void Test()
-        {
-            UnityEngine.Debug.Log("Hello Debug I Am IKStep!");
-        }
     }
 }
