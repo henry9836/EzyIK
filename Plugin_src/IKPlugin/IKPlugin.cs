@@ -72,7 +72,7 @@ namespace HenryIK
                     boneNodes.Add(new BoneNode(ref tmpNode));
 
                     //Go up the chain until we find the root node or reach our max depth search
-                    if (tmpRoot.parent == null || currentDepth >= maxDepth)
+                    if (tmpRoot.parent == null || currentDepth > maxDepth)
                     {
                         rootNode = tmpRoot;
                         break;

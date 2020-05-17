@@ -224,7 +224,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   bendTarget: {fileID: 0}
-  maxDepthSearch: 5
+  maxDepthSearch: 4
   solverIterations: 5
   solvedDistanceThreshold: 0.001
   visualiserScale: 0.5
