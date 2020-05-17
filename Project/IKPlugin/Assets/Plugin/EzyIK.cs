@@ -6,12 +6,9 @@ using UnityEngine.XR;
 
 public class EzyIK : MonoBehaviour
 {
-
-    public List<IKPlugin.BoneNode> bones = new List<IKPlugin.BoneNode>();
-
+    public IKPlugin.BoneStructure boneStructure;
     public Transform target;
     public Transform bendTarget;
-    public bool useBendTarget = false;
     //How far to search for bones if below 0 then search till we cannot find any more objects
     public int maxDepthSearch = -1;
     public int solverIterations = 5;
@@ -25,7 +22,7 @@ public class EzyIK : MonoBehaviour
         if (target)
         {
             GameObject me = this.gameObject;
-            bones = IKPlugin.Init(ref me, ref maxDepthSearch, ref target);
+            boneStructure = new IKPlugin.BoneStructure(ref me, ref maxDepthSearch, ref target, ref bendTarget, ref solvedDistanceThreshold, ref solverIterations);
             me = null;
         }
         else
@@ -37,21 +34,23 @@ public class EzyIK : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        IKPlugin.IKStep(ref bones, ref target, ref bendTarget, ref useBendTarget, ref solverIterations, ref solvedDistanceThreshold);
+        IKPlugin.IKStep(ref boneStructure);
     }
 
     //Draw In Editor
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        for (int i = 0; i < bones.Count; i++)
-        {
-            Gizmos.DrawSphere(bones[i].nodeTransform.position, visualiserScale);
-            if (i > 0)
+        if (boneStructure != null) {
+            for (int i = 0; i < boneStructure.boneNodes.Count; i++)
             {
-                Gizmos.color = Color.magenta;
-                Gizmos.DrawLine(bones[i].nodeTransform.position, bones[i-1].nodeTransform.position);
-                Gizmos.color = Color.green;
+                Gizmos.DrawSphere(boneStructure.boneNodes[i].nodeTransform.position, visualiserScale);
+                if (i > 0)
+                {
+                    Gizmos.color = Color.magenta;
+                    Gizmos.DrawLine(boneStructure.boneNodes[i].nodeTransform.position, boneStructure.boneNodes[i - 1].nodeTransform.position);
+                    Gizmos.color = Color.green;
+                }
             }
         }
     }

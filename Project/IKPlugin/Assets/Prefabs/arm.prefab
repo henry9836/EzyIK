@@ -40,7 +40,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3917138000729030747}
-  - component: {fileID: 2986872507264625504}
   m_Layer: 0
   m_Name: Bone.003
   m_TagString: Untagged
@@ -55,28 +54,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2380966922736827992}
-  m_LocalRotation: {x: 0, y: -0.5860865, z: -0, w: 0.8102485}
+  m_LocalRotation: {x: -0.000000003764802, y: -0.59566903, z: 0.000000064912626, w: 0.80323005}
   m_LocalPosition: {x: -0, y: 0.10308202, z: 0}
   m_LocalScale: {x: 0.99999994, y: 1, z: 0.99999994}
   m_Children:
   - {fileID: 6693222285365938779}
   m_Father: {fileID: 1409305950540473172}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2986872507264625504
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2380966922736827992}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba94c184b1486694b95667905bff52c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxDepthSearch: 1
-  visualiserScale: 0.5
+  m_LocalEulerAnglesHint: {x: 0, y: -73.121, z: 0}
 --- !u!1 &3101350673628636355
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,6 +188,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6693222285365938779}
+  - component: {fileID: 734213139}
   m_Layer: 0
   m_Name: Bone.003_end
   m_TagString: Untagged
@@ -224,6 +210,24 @@ Transform:
   m_Father: {fileID: 3917138000729030747}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &734213139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4578332967946579205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba94c184b1486694b95667905bff52c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  bendTarget: {fileID: 0}
+  maxDepthSearch: 4
+  solverIterations: 5
+  solvedDistanceThreshold: 0.001
+  visualiserScale: 0.5
 --- !u!1 &6986418192475429572
 GameObject:
   m_ObjectHideFlags: 0
