@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -14,7 +15,7 @@ namespace HenryIK
             public Transform parentTransform;
             public Vector3 startDir;
             public Quaternion startRot;
-            public Vector3 startRotTarget;
+            public Vector3 startDirTarget;
             public float initalDistanceToChild = 0.0f;
             public bool isRootNode;
             public float totalChainDistance;
@@ -65,12 +66,14 @@ namespace HenryIK
                     currentDepth++;
                 }
 
-                //Invert our list of bones for FABIK
+                //Invert our list of bones for easier FABIK logic
                 boneNodes.Reverse();
 
                 //Get the stating target rotation
                 startTargetRot = Quaternion.Inverse(target.rotation) * rootNode.rotation;
 
+
+                Transform currentBoneTransform = startBone.transform;
                 //Set up extra infomation now that we now details about our root and target nodes
                 for (int i = boneNodes.Count - 1; i > -1; i--)
                 {
@@ -81,17 +84,20 @@ namespace HenryIK
                     if (i == boneNodes.Count - 1)
                     {
                         //Get Rotation to the target/next bone
-                        boneNodes[i].startRotTarget = (Quaternion.Inverse(rootNode.rotation) * (target.position - rootNode.position)) - (Quaternion.Inverse(rootNode.rotation) * (boneNodes[i].nodeTransform.position - rootNode.position));
-                    }
+                        boneNodes[i].startDirTarget = (Quaternion.Inverse(rootNode.rotation) * (target.position - rootNode.position)) - (Quaternion.Inverse(rootNode.rotation) * (boneNodes[i].nodeTransform.position - rootNode.position));
+                    }  
                     else
                     {
                         //Get Rotation to the target/next bone
-                        boneNodes[i].startRotTarget = (Quaternion.Inverse(rootNode.rotation) * (boneNodes[i + 1].nodeTransform.position - rootNode.position)) - (Quaternion.Inverse(rootNode.rotation) * (boneNodes[i].nodeTransform.position - rootNode.position));
+                        boneNodes[i].startDirTarget = (Quaternion.Inverse(rootNode.rotation) * (boneNodes[i + 1].nodeTransform.position - rootNode.position)) - (Quaternion.Inverse(rootNode.rotation) * (boneNodes[i].nodeTransform.position - rootNode.position));
                         //Look at bone in front and get distance to it
-                        boneNodes[i].initalDistanceToChild = boneNodes[i].startRotTarget.magnitude;
+                        boneNodes[i].initalDistanceToChild = boneNodes[i].startDirTarget.magnitude;
                         //Append distance to total
                         totalChainDistance += boneNodes[i].initalDistanceToChild;
                     }
+
+                    currentBoneTransform = currentBoneTransform.parent;
+
                 }
 
                 //Get squared result for faster calc later on
@@ -102,8 +108,6 @@ namespace HenryIK
 
         public static void IKStep(ref BoneStructure boneStructure)
         {
-            Debug.Log($"I am the IKStep and I have {boneStructure.boneNodes.Count} bone nodes in my structure ||| ELEMENT [0] {boneStructure.boneNodes[0].node.name} LAST ELEMENT {boneStructure.boneNodes[boneStructure.boneNodes.Count - 1].node.name}");
-
             if (boneStructure.target == null)
             {
                 Debug.LogError($"No Target Assigned For IKSystem on {boneStructure.boneNodes[boneStructure.boneNodes.Count - 1].node.name}");
@@ -117,17 +121,17 @@ namespace HenryIK
             for (int i = 0; i < boneStructure.boneNodes.Count; i++)
             {
                 nodePositions.Add(Quaternion.Inverse(boneStructure.rootNode.rotation) * (boneStructure.boneNodes[i].nodeTransform.position - boneStructure.rootNode.position));
-                Debug.Log($"Added {nodePositions[nodePositions.Count - 1]} to element {i} which has a name of {boneStructure.boneNodes[i].node.name}");
             }
-            
+
             Vector3 targetPosition = (Quaternion.Inverse(boneStructure.rootNode.rotation) * (boneStructure.target.position - boneStructure.rootNode.position));
             Quaternion targetRotation = (Quaternion.Inverse(boneStructure.target.rotation) * boneStructure.rootNode.rotation);
+
 
             //Is the target further than we can reach?
             if ((targetPosition - (Quaternion.Inverse(boneStructure.rootNode.rotation) * (nodePositions[0] - boneStructure.rootNode.position))).sqrMagnitude >= boneStructure.totalChainDistanceSquared)
             {
                 //Go along a direction vector
-                Vector3 dir = (boneStructure.target.position - nodePositions[0]).normalized;
+                Vector3 dir = (targetPosition - nodePositions[0]).normalized;
 
                 //Assign positions along vector, skip root
                 for (int i = 1; i < nodePositions.Count; i++)
@@ -141,9 +145,20 @@ namespace HenryIK
             for (int i = 0; i < nodePositions.Count; i++)
             {
                 Debug.Log($"There is {boneStructure.boneNodes.Count} boneNodes and {nodePositions.Count} node Positions");
-                Debug.Log($"adjusting node [{i}] to {boneStructure.rootNode.rotation * nodePositions[i] + boneStructure.rootNode.position} found by {boneStructure.rootNode.rotation} * {nodePositions[i]} + {boneStructure.rootNode.position}");
-                
+
                 //Rotations
+                //Leaf
+                if (i == nodePositions.Count - 1)
+                {
+                    Debug.Log($"Leaf rot called on {boneStructure.boneNodes[i].node.name}");
+                    boneStructure.boneNodes[i].nodeTransform.rotation = boneStructure.rootNode.rotation * (Quaternion.Inverse(targetRotation) * boneStructure.startTargetRot * Quaternion.Inverse(boneStructure.boneNodes[i].startRot));
+                }
+                //Ignore root
+                else if (i != 0)
+                {
+                    Debug.Log($"Node rot called on {boneStructure.boneNodes[i].node.name}");
+                    boneStructure.boneNodes[i].nodeTransform.rotation = boneStructure.rootNode.rotation * (Quaternion.FromToRotation(boneStructure.boneNodes[i].startDirTarget, nodePositions[i + 1] - nodePositions[i]) * Quaternion.Inverse(boneStructure.boneNodes[i].startRot));
+                }
 
                 //Positions
                 boneStructure.boneNodes[i].nodeTransform.position = boneStructure.rootNode.rotation * nodePositions[i] + boneStructure.rootNode.position;
