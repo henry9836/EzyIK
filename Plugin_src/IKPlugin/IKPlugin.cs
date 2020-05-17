@@ -72,8 +72,6 @@ namespace HenryIK
                 //Get the stating target rotation
                 startTargetRot = Quaternion.Inverse(target.rotation) * rootNode.rotation;
 
-
-                Transform currentBoneTransform = startBone.transform;
                 //Set up extra infomation now that we now details about our root and target nodes
                 for (int i = boneNodes.Count - 1; i > -1; i--)
                 {
@@ -95,8 +93,6 @@ namespace HenryIK
                         //Append distance to total
                         totalChainDistance += boneNodes[i].initalDistanceToChild;
                     }
-
-                    currentBoneTransform = currentBoneTransform.parent;
 
                 }
 
@@ -144,7 +140,7 @@ namespace HenryIK
             //Set Positions and Rotations
             for (int i = 0; i < nodePositions.Count; i++)
             {
-                Debug.Log($"There is {boneStructure.boneNodes.Count} boneNodes and {nodePositions.Count} node Positions");
+                Debug.Log($"There is {boneStructure.boneNodes.Count} boneNodes and {nodePositions.Count} node Positions we are effecting node {i}");
 
                 //Rotations
                 //Leaf
@@ -153,8 +149,7 @@ namespace HenryIK
                     Debug.Log($"Leaf rot called on {boneStructure.boneNodes[i].node.name}");
                     boneStructure.boneNodes[i].nodeTransform.rotation = boneStructure.rootNode.rotation * (Quaternion.Inverse(targetRotation) * boneStructure.startTargetRot * Quaternion.Inverse(boneStructure.boneNodes[i].startRot));
                 }
-                //Ignore root
-                else if (i != 0)
+                else
                 {
                     Debug.Log($"Node rot called on {boneStructure.boneNodes[i].node.name}");
                     boneStructure.boneNodes[i].nodeTransform.rotation = boneStructure.rootNode.rotation * (Quaternion.FromToRotation(boneStructure.boneNodes[i].startDirTarget, nodePositions[i + 1] - nodePositions[i]) * Quaternion.Inverse(boneStructure.boneNodes[i].startRot));
