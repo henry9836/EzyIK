@@ -9,7 +9,6 @@ public class EzyIK : MonoBehaviour
     public IKPlugin.BoneStructure boneStructure;
     public Transform target;
     public Transform bendTarget;
-    public bool useBendTarget = false;
     //How far to search for bones if below 0 then search till we cannot find any more objects
     public int maxDepthSearch = -1;
     public int solverIterations = 5;
@@ -23,7 +22,7 @@ public class EzyIK : MonoBehaviour
         if (target)
         {
             GameObject me = this.gameObject;
-            boneStructure = new IKPlugin.BoneStructure(ref me, ref maxDepthSearch, ref target);
+            boneStructure = new IKPlugin.BoneStructure(ref me, ref maxDepthSearch, ref target, ref bendTarget, ref solvedDistanceThreshold, ref solverIterations);
             me = null;
         }
         else
