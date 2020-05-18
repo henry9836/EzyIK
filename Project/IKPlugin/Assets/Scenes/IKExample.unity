@@ -1306,6 +1306,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: customMoveGraph.m_Curve.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
       propertyPath: target
       value: 
       objectReference: {fileID: 1336125434}
@@ -1313,6 +1317,54 @@ PrefabInstance:
       propertyPath: bendTarget
       value: 
       objectReference: {fileID: 1556810516}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: nodeMoveSpeed
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: customMoveGraph.m_Curve.Array.data[0].inSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: customMoveGraph.m_Curve.Array.data[0].outSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: customMoveGraph.m_Curve.Array.data[1].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: customMoveGraph.m_Curve.Array.data[1].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: customMoveGraph.m_PostInfinity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: customMoveGraph.m_Curve.Array.data[0].value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: customMoveGraph.m_Curve.Array.data[0].tangentMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: customMoveGraph.m_Curve.Array.data[1].tangentMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: customMoveGraph.m_Curve.Array.data[1].inSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: customMoveGraph.m_Curve.Array.data[1].outSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: movementType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5532988308891819488, guid: fc1e0857f723fac40ab0301a979e8400,
         type: 3}
       propertyPath: m_LocalPosition.x

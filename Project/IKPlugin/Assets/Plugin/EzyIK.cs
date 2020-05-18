@@ -13,6 +13,10 @@ public class EzyIK : MonoBehaviour
     public int maxDepthSearch = -1;
     public int solverIterations = 5;
     public float solvedDistanceThreshold = 0.001f;
+    public float nodeMoveSpeed = -1.0f;
+    public float customMoveGraphMaxEffectDistance = 10.0f;
+    public AnimationCurve customMoveGraph;
+    public IKPlugin.BoneStructure.MoveType movementType = IKPlugin.BoneStructure.MoveType.LINEAR;
 
     [Range(0.0f, 5.0f)]
     public float visualiserScale = 0.3f;
@@ -22,7 +26,7 @@ public class EzyIK : MonoBehaviour
         if (target)
         {
             GameObject me = this.gameObject;
-            boneStructure = new IKPlugin.BoneStructure(ref me, ref maxDepthSearch, ref target, ref bendTarget, ref solvedDistanceThreshold, ref solverIterations);
+            boneStructure = new IKPlugin.BoneStructure(ref me, ref maxDepthSearch, ref target, ref bendTarget, ref solvedDistanceThreshold, ref solverIterations, ref nodeMoveSpeed, ref movementType, ref customMoveGraph, ref customMoveGraphMaxEffectDistance);
             me = null;
         }
         else

@@ -31,7 +31,16 @@ namespace HenryIK
 
         public class BoneStructure
         {
+            public enum MoveType
+            {
+                LINEAR,
+                CUSTOM
+            }
+
+
             public List<BoneNode> boneNodes = new List<BoneNode>();
+            public MoveType moveType;
+            public AnimationCurve moveCurve;
             public Quaternion startTargetRot;
             public Transform rootNode;
             public Transform target;
@@ -40,11 +49,14 @@ namespace HenryIK
             public float totalChainDistanceSquared;
             public float arriveThreshold;
             public float arriveThresholdSquared;
+            public float nodeMoveSpeed;
+            public float customMoveGraphMaxEffectDistance;
             public int maxDepth = -1;
             public int maxSolveIterations = 5;
 
+
             //Create a bonestructure
-            public BoneStructure(ref GameObject startBone, ref int maxDepth, ref Transform _target, ref Transform _bendTarget, ref float _arriveThreshold, ref int _maxSolveIterations)
+            public BoneStructure(ref GameObject startBone, ref int maxDepth, ref Transform _target, ref Transform _bendTarget, ref float _arriveThreshold, ref int _maxSolveIterations, ref float _moveSpeed, ref MoveType _moveType, ref AnimationCurve _moveCurve, ref float _customMoveGraphMaxEffectDistance)
             {
                 //Init here
                 if (_target == null)
@@ -58,6 +70,10 @@ namespace HenryIK
                 arriveThreshold = _arriveThreshold;
                 arriveThresholdSquared = arriveThreshold * arriveThreshold;
                 maxSolveIterations = _maxSolveIterations;
+                nodeMoveSpeed = _moveSpeed;
+                moveType = _moveType;
+                moveCurve = _moveCurve;
+                customMoveGraphMaxEffectDistance = _customMoveGraphMaxEffectDistance;
 
                 if (_bendTarget != null)
                 {
@@ -134,9 +150,36 @@ namespace HenryIK
                 nodePositions.Add(Quaternion.Inverse(boneStructure.rootNode.rotation) * (boneStructure.boneNodes[i].nodeTransform.position - boneStructure.rootNode.position));
             }
 
-            Vector3 targetPosition = (Quaternion.Inverse(boneStructure.rootNode.rotation) * (boneStructure.target.position - boneStructure.rootNode.position));
-            Quaternion targetRotation = (Quaternion.Inverse(boneStructure.target.rotation) * boneStructure.rootNode.rotation);
+            Vector3 targetPosition = Vector3.zero;
+            Quaternion targetRotation = Quaternion.identity;
 
+            //No movespeed specified
+            if (boneStructure.nodeMoveSpeed < 0.0f){
+
+                targetPosition = (Quaternion.Inverse(boneStructure.rootNode.rotation) * (boneStructure.target.position - boneStructure.rootNode.position));
+                targetRotation = (Quaternion.Inverse(boneStructure.target.rotation) * boneStructure.rootNode.rotation);
+            }
+            //Move slower towards target
+            else if (boneStructure.moveType == BoneStructure.MoveType.LINEAR)
+            {
+                targetPosition = (Quaternion.Inverse(boneStructure.rootNode.rotation) * (boneStructure.target.position - boneStructure.rootNode.position));
+                targetPosition = Vector3.MoveTowards(nodePositions[nodePositions.Count - 1], targetPosition, boneStructure.nodeMoveSpeed * Time.deltaTime);
+                targetRotation = (Quaternion.Inverse(boneStructure.target.rotation) * boneStructure.rootNode.rotation);
+            }
+            //Move along a graph
+            else if (boneStructure.moveType == BoneStructure.MoveType.CUSTOM)
+            {
+                targetPosition = (Quaternion.Inverse(boneStructure.rootNode.rotation) * (boneStructure.target.position - boneStructure.rootNode.position));
+                targetPosition = Vector3.MoveTowards(nodePositions[nodePositions.Count - 1], targetPosition, boneStructure.nodeMoveSpeed * boneStructure.moveCurve.Evaluate((Vector3.Distance(nodePositions[nodePositions.Count - 1], targetPosition))/boneStructure.customMoveGraphMaxEffectDistance) * Time.deltaTime);
+                targetRotation = (Quaternion.Inverse(boneStructure.target.rotation) * boneStructure.rootNode.rotation);
+            }
+            //Fail safe
+            else
+            {
+                Debug.LogError($"No behaviour set up for moveType {boneStructure.moveType} defaulting to no moveType behaviour");
+                targetPosition = (Quaternion.Inverse(boneStructure.rootNode.rotation) * (boneStructure.target.position - boneStructure.rootNode.position));
+                targetRotation = (Quaternion.Inverse(boneStructure.target.rotation) * boneStructure.rootNode.rotation);
+            }
 
             //Is the target further than we can reach?
             if ((targetPosition - (Quaternion.Inverse(boneStructure.rootNode.rotation) * (boneStructure.boneNodes[0].nodeTransform.position - boneStructure.rootNode.position))).sqrMagnitude >= boneStructure.totalChainDistanceSquared)
