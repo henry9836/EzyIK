@@ -227,7 +227,7 @@ MonoBehaviour:
   maxDepthSearch: 4
   solverIterations: 5
   solvedDistanceThreshold: 0.001
-  visualiserScale: 0.5
+  visualiserScale: 0.3
 --- !u!1 &6986418192475429572
 GameObject:
   m_ObjectHideFlags: 0

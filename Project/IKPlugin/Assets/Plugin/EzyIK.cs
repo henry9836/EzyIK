@@ -14,8 +14,8 @@ public class EzyIK : MonoBehaviour
     public int solverIterations = 5;
     public float solvedDistanceThreshold = 0.001f;
 
-    [Range(0.1f, 5.0f)]
-    public float visualiserScale = 0.5f;
+    [Range(0.0f, 5.0f)]
+    public float visualiserScale = 0.3f;
 
     void Awake()
     {
@@ -44,12 +44,22 @@ public class EzyIK : MonoBehaviour
         if (boneStructure != null) {
             for (int i = 0; i < boneStructure.boneNodes.Count; i++)
             {
+                Gizmos.color = Color.green;
                 Gizmos.DrawSphere(boneStructure.boneNodes[i].nodeTransform.position, visualiserScale);
                 if (i > 0)
                 {
                     Gizmos.color = Color.magenta;
                     Gizmos.DrawLine(boneStructure.boneNodes[i].nodeTransform.position, boneStructure.boneNodes[i - 1].nodeTransform.position);
-                    Gizmos.color = Color.green;
+                }
+                if (boneStructure.bendTarget != null)
+                {
+                    Gizmos.color = Color.blue;
+                    Gizmos.DrawSphere(boneStructure.bendTarget.position, visualiserScale);
+                }
+                if (boneStructure.target != null)
+                {
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawSphere(boneStructure.target.position, visualiserScale);
                 }
             }
         }
