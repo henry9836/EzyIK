@@ -22,8 +22,8 @@ public class EzyIK : MonoBehaviour
     [Header("Movement Settings")]
     public float nodeMoveSpeed = -1.0f;
     public float rotMoveSpeed = -1.0f;
-    public AnimationCurve customMoveGraph;
-    public AnimationCurve customRotGraph;
+    public AnimationCurve MoveGraph = AnimationCurve.EaseInOut(0.0f, 0.0f, 1.0f, 1.0f);
+    public AnimationCurve RotGraph = AnimationCurve.EaseInOut(0.0f, 0.0f, 1.0f, 1.0f);
 
     [Header("Debugging")]
     [Range(0.0f, 5.0f)]
@@ -36,7 +36,7 @@ public class EzyIK : MonoBehaviour
             GameObject me = this.gameObject;
             //BoneStructure(ref GameObject startBone, ref int maxDepth, ref Transform _target, ref Transform _bendTarget, ref float _arriveThreshold, ref int _maxSolveIterations, ref float _moveSpeed, ref float _rotSpeed, ref MoveType _moveType, ref AnimationCurve _moveCurve, ref AnimationCurve _rotCurve)
 
-            boneStructure = new IKPlugin.BoneStructure(ref me, ref maxDepthSearch, ref target, ref bendTarget, ref solvedDistanceThreshold, ref solverIterations, ref nodeMoveSpeed, ref rotMoveSpeed, ref movementType, ref customMoveGraph, ref customRotGraph);
+            boneStructure = new IKPlugin.BoneStructure(ref me, ref maxDepthSearch, ref target, ref bendTarget, ref solvedDistanceThreshold, ref solverIterations, ref nodeMoveSpeed, ref rotMoveSpeed, ref movementType, ref MoveGraph, ref RotGraph);
             me = null;
         }
         else
