@@ -1319,7 +1319,7 @@ PrefabInstance:
       objectReference: {fileID: 1556810516}
     - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
       propertyPath: nodeMoveSpeed
-      value: -1
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
       propertyPath: customMoveGraph.m_Curve.Array.data[0].inSlope
