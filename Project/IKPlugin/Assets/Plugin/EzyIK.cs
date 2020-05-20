@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.Experimental.TerrainAPI;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using HenryIK;
-using UnityEngine.XR;
 
 public class EzyIK : MonoBehaviour
 {
@@ -22,10 +25,13 @@ public class EzyIK : MonoBehaviour
     [Header("Movement Settings")]
     public float nodeMoveSpeed = -1.0f;
     public float rotMoveSpeed = -1.0f;
+
+    [Header("Movement Settings")]
     public AnimationCurve MoveGraph = AnimationCurve.EaseInOut(0.0f, 0.0f, 1.0f, 1.0f);
     public AnimationCurve RotGraph = AnimationCurve.EaseInOut(0.0f, 0.0f, 1.0f, 1.0f);
 
     [Header("Debugging")]
+    public bool debugMode = false;
     [Range(0.0f, 5.0f)]
     public float visualiserScale = 0.3f;
 
@@ -34,8 +40,6 @@ public class EzyIK : MonoBehaviour
         if (target)
         {
             GameObject me = this.gameObject;
-            //BoneStructure(ref GameObject startBone, ref int maxDepth, ref Transform _target, ref Transform _bendTarget, ref float _arriveThreshold, ref int _maxSolveIterations, ref float _moveSpeed, ref float _rotSpeed, ref MoveType _moveType, ref AnimationCurve _moveCurve, ref AnimationCurve _rotCurve)
-
             boneStructure = new IKPlugin.BoneStructure(ref me, ref maxDepthSearch, ref target, ref bendTarget, ref solvedDistanceThreshold, ref solverIterations, ref nodeMoveSpeed, ref rotMoveSpeed, ref movementType, ref MoveGraph, ref RotGraph);
             me = null;
         }
@@ -51,31 +55,157 @@ public class EzyIK : MonoBehaviour
         IKPlugin.IKStep(ref boneStructure);
     }
 
+#if UNITY_EDITOR
     //Draw In Editor
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
-        if (boneStructure != null) {
-            for (int i = 0; i < boneStructure.boneNodes.Count; i++)
+        if (debugMode)
+        {
+            Gizmos.color = Color.green;
+            if (boneStructure != null)
             {
-                Gizmos.color = Color.green;
-                Gizmos.DrawSphere(boneStructure.boneNodes[i].nodeTransform.position, visualiserScale);
-                if (i > 0)
+                for (int i = 0; i < boneStructure.boneNodes.Count; i++)
                 {
-                    Gizmos.color = Color.magenta;
-                    Gizmos.DrawLine(boneStructure.boneNodes[i].nodeTransform.position, boneStructure.boneNodes[i - 1].nodeTransform.position);
-                }
-                if (boneStructure.bendTarget != null)
-                {
-                    Gizmos.color = Color.blue;
-                    Gizmos.DrawSphere(boneStructure.bendTarget.position, visualiserScale);
-                }
-                if (boneStructure.target != null)
-                {
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawSphere(boneStructure.target.position, visualiserScale);
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawSphere(boneStructure.boneNodes[i].nodeTransform.position, visualiserScale);
+                    if (i > 0)
+                    {
+                        Gizmos.color = Color.magenta;
+                        Gizmos.DrawLine(boneStructure.boneNodes[i].nodeTransform.position, boneStructure.boneNodes[i - 1].nodeTransform.position);
+                    }
+                    if (boneStructure.bendTarget != null)
+                    {
+                        Gizmos.color = Color.blue;
+                        Gizmos.DrawSphere(boneStructure.bendTarget.position, visualiserScale);
+                    }
+                    if (boneStructure.target != null)
+                    {
+                        Gizmos.color = Color.red;
+                        Gizmos.DrawSphere(boneStructure.target.position, visualiserScale);
+                    }
                 }
             }
         }
     }
+#endif
 }
+
+//Custom Editor
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(EzyIK))]
+[CanEditMultipleObjects]
+public class EzyIKEditor : Editor {
+
+    SerializedProperty movementmode;
+    SerializedProperty depth;
+    SerializedProperty targetTransform;
+    SerializedProperty bendTransform;
+    SerializedProperty solveAmount;
+    SerializedProperty arriveDis;
+    SerializedProperty nodeMove;
+    SerializedProperty nodeRot;
+    SerializedProperty scaleDebug;
+    SerializedProperty debugFlag;
+    SerializedProperty rotGraph;
+    SerializedProperty movGraph;
+    
+    //Setup
+    void OnEnable()
+    {
+        movementmode = serializedObject.FindProperty("movementType");
+        depth = serializedObject.FindProperty("maxDepthSearch");
+        targetTransform = serializedObject.FindProperty("target");
+        bendTransform = serializedObject.FindProperty("bendTarget");
+        solveAmount = serializedObject.FindProperty("solverIterations");
+        arriveDis = serializedObject.FindProperty("solvedDistanceThreshold");
+        nodeMove = serializedObject.FindProperty("nodeMoveSpeed");
+        nodeRot = serializedObject.FindProperty("rotMoveSpeed");
+        scaleDebug = serializedObject.FindProperty("visualiserScale");
+        debugFlag = serializedObject.FindProperty("debugMode");
+        movGraph = serializedObject.FindProperty("MoveGraph");
+        rotGraph = serializedObject.FindProperty("RotGraph");
+    }
+
+    //When the user is inside the insepector window
+    public override void OnInspectorGUI()
+    {
+        serializedObject.Update();
+
+        if (!UnityEditor.EditorApplication.isPlaying) {
+
+            EditorGUILayout.PropertyField(movementmode);
+            EditorGUILayout.PropertyField(depth);
+            EditorGUILayout.PropertyField(targetTransform);
+            EditorGUILayout.PropertyField(bendTransform);
+
+            if (targetTransform.objectReferenceValue == null)
+            {
+                EditorGUILayout.HelpBox("No Target Set", MessageType.Error);
+            }
+            if (depth.intValue < 3)
+            {
+                EditorGUILayout.HelpBox("Depth Search Must Be Greater Than 2", MessageType.Error);
+            }
+
+            EditorGUILayout.PropertyField(solveAmount);
+            EditorGUILayout.PropertyField(arriveDis);
+
+            if (solveAmount.intValue < 1)
+            {
+                EditorGUILayout.HelpBox("Solver Iteration Cannot Be Less Than 1", MessageType.Error);
+            }
+            if (arriveDis.floatValue < 0.0f)
+            {
+                EditorGUILayout.HelpBox("Arrive Distance Cannot Be Less Than 0", MessageType.Error);
+            }
+
+            //Switch between movement modes
+            switch (movementmode.enumValueIndex)
+            {
+                case (int)IKPlugin.BoneStructure.MoveType.LINEAR:
+                    {
+                        EditorGUILayout.PropertyField(nodeMove, new GUIContent("Movement Speed"));
+                        EditorGUILayout.PropertyField(nodeRot, new GUIContent("Rotation Speed"));
+                        if (nodeMove.floatValue < 0.0f)
+                        {
+                            EditorGUILayout.HelpBox("Movement Speed Will Be Ignored As It Is A Negative Value", MessageType.Warning);
+                        }
+                        if (nodeRot.floatValue < 0.0f)
+                        {
+                            EditorGUILayout.HelpBox("Rotation Speed Will Be Ignored As It Is A Negative Value", MessageType.Warning);
+                        }
+                        break;
+                    }
+                case (int)IKPlugin.BoneStructure.MoveType.CUSTOM:
+                    {
+                        EditorGUILayout.PropertyField(movGraph, new GUIContent("Movement Arrival Graph"));
+                        EditorGUILayout.PropertyField(rotGraph, new GUIContent("Rotational Arrival Graph"));
+                        break;
+                    }
+                default:
+                    {
+                        Debug.LogError($"Unknown movementmode {movementmode}|{movementmode.enumValueIndex}");
+                        break;
+                    }
+            }
+        }
+
+        else
+        {
+            EditorGUILayout.HelpBox("Values cannot be changed during runtime", MessageType.Info);
+        }
+
+        EditorGUILayout.PropertyField(debugFlag);
+
+        if (debugFlag.boolValue)
+        {
+            EditorGUILayout.PropertyField(scaleDebug);
+        }
+
+        serializedObject.ApplyModifiedProperties();
+    }
+
+    
+}
+#endif

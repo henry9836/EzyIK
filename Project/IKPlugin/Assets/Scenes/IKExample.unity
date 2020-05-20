@@ -1319,7 +1319,7 @@ PrefabInstance:
       objectReference: {fileID: 1556810516}
     - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
       propertyPath: nodeMoveSpeed
-      value: 1
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
       propertyPath: customMoveGraph.m_Curve.Array.data[0].inSlope
@@ -1369,6 +1369,27 @@ PrefabInstance:
       propertyPath: visualiserScale
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: debugMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: solvedDistanceThreshold
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: maxDepthSearch
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2141159041057426810, guid: fc1e0857f723fac40ab0301a979e8400,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6aaf8c50580b4ec4a8ea855b50ebb3d8, type: 2}
     - target: {fileID: 5532988308891819488, guid: fc1e0857f723fac40ab0301a979e8400,
         type: 3}
       propertyPath: m_LocalPosition.x
