@@ -49,8 +49,7 @@ public class EzyIK : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         IKPlugin.IKStep(ref boneStructure);
     }
@@ -163,9 +162,9 @@ public class EzyIKEditor : Editor {
             {
                 EditorGUILayout.HelpBox("No Target Set", MessageType.Error);
             }
-            if (depth.intValue < 3)
+            if (depth.intValue < 3 && depth.intValue != -1)
             {
-                EditorGUILayout.HelpBox("Depth Search Must Be Greater Than 2", MessageType.Error);
+                EditorGUILayout.HelpBox("Depth Search Must Be Greater Than 2 or Set To -1", MessageType.Error);
             }
 
             EditorGUILayout.PropertyField(solveAmount);

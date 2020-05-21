@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/IKExample_Hands.unity
+    path: Assets/EzyIK/Sample Scenes/IKExample_Hands.unity
     guid: 97acca2087ded69458022be6d6f6b173
+  - enabled: 1
+    path: Assets/EzyIK/Sample Scenes/IKExample.unity
+    guid: b9ac8e5cd12e3394596eb24b090e97ff
   m_configObjects: {}
