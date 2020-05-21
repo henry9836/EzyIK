@@ -1367,7 +1367,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
       propertyPath: visualiserScale
-      value: 0.3
+      value: 1.077
       objectReference: {fileID: 0}
     - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
       propertyPath: m_Enabled
@@ -1383,7 +1383,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
       propertyPath: maxDepthSearch
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: rotMoveSpeed
       value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
+      propertyPath: solverIterations
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2141159041057426810, guid: fc1e0857f723fac40ab0301a979e8400,
         type: 3}

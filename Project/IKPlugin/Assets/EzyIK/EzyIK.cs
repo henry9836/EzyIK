@@ -59,6 +59,26 @@ public class EzyIK : MonoBehaviour
     //Draw In Editor
     private void OnDrawGizmos()
     {
+        if (UnityEditor.EditorApplication.isPlaying)
+        {
+            if (boneStructure == null)
+            {
+                Gizmos.DrawIcon(transform.position, "../EzyIK/Icons/EzyIKiconError.png", true);
+            }
+            else if (boneStructure.rootNode != null)
+            {
+                Gizmos.DrawIcon(boneStructure.rootNode.position, "../EzyIK/Icons/EzyIKicon.png", true);
+            }
+            else
+            {
+                Gizmos.DrawIcon(transform.position, "../EzyIK/Icons/EzyIKiconError.png", true);
+            }
+        }
+        else
+        {
+            Gizmos.DrawIcon(transform.position, "../EzyIK/Icons/EzyIKicon.png", true);
+        }
+
         if (debugMode)
         {
             Gizmos.color = Color.green;
@@ -194,6 +214,11 @@ public class EzyIKEditor : Editor {
         else
         {
             EditorGUILayout.HelpBox("Values cannot be changed during runtime", MessageType.Info);
+
+            //Stop Player if unsafe values
+            if (targetTransform.objectReferenceValue == null || depth.intValue < 3 || solveAmount.intValue < 1 || arriveDis.floatValue < 0.0f) {
+                Debug.LogError($"Invalid Settings On EzyIK Object: {serializedObject.targetObject.name}");
+            }
         }
 
         EditorGUILayout.PropertyField(debugFlag);
