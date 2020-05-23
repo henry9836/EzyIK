@@ -215,7 +215,7 @@ public class EzyIKEditor : Editor {
             EditorGUILayout.HelpBox("Values cannot be changed during runtime", MessageType.Info);
 
             //Stop Player if unsafe values
-            if (targetTransform.objectReferenceValue == null || depth.intValue < 3 || solveAmount.intValue < 1 || arriveDis.floatValue < 0.0f) {
+            if (targetTransform.objectReferenceValue == null || (depth.intValue < 3 && depth.intValue != -1) || solveAmount.intValue < 1 || arriveDis.floatValue < 0.0f) {
                 Debug.LogError($"Invalid Settings On EzyIK Object: {serializedObject.targetObject.name}");
             }
         }

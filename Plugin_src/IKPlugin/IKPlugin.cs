@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.XR;
 
 namespace HenryIK
 {
@@ -12,14 +11,9 @@ namespace HenryIK
         {
             public GameObject node;
             public Transform nodeTransform;
-            public Transform parentTransform;
-            public Vector3 startDir;
             public Quaternion startRot;
             public Vector3 startDirTarget;
             public float initalDistanceToChild = 0.0f;
-            public bool isRootNode;
-            public float totalChainDistance;
-            public float totalChainDistanceSquared;
 
             //If we have left the bone section do not go any further upwards
             public BoneNode(ref GameObject _node)
@@ -96,7 +90,7 @@ namespace HenryIK
                     boneNodes.Add(new BoneNode(ref tmpNode));
 
                     //Go up the chain until we find the root node or reach our max depth search
-                    if (tmpRoot.parent == null || currentDepth > maxDepth)
+                    if (tmpRoot.parent == null || (currentDepth > maxDepth && maxDepth != -1))
                     {
                         rootNode = tmpRoot;
                         break;

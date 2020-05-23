@@ -683,6 +683,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: armAnin
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: f7aa41a18615e5d41bcf709d9d6b290a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7aa41a18615e5d41bcf709d9d6b290a, type: 3}
 --- !u!1 &1007983646
@@ -1225,7 +1230,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1336125430}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 7.15, z: 4.47}
+  m_LocalPosition: {x: 0, y: 3.84, z: 5.41}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1238,7 +1243,7 @@ Animation:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1336125430}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Animation: {fileID: 7400000, guid: 09a20de5b707777439e245f2bb0b9721, type: 2}
   m_Animations:
@@ -1547,7 +1552,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
       propertyPath: debugMode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
       propertyPath: solvedDistanceThreshold
@@ -1629,6 +1634,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: arm
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832199152905760755, guid: fc1e0857f723fac40ab0301a979e8400,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
