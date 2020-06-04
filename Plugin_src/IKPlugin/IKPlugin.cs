@@ -69,6 +69,7 @@ namespace HenryIK
                 moveType = _moveType;
                 moveCurve = _moveCurve;
                 rotCurve = _rotCurve;
+
                 if (_rotSpeed > 0.0f) {
                     rotMoveSpeed = _rotSpeed;
                 }
