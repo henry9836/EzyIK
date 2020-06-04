@@ -1,2 +1,2 @@
-# HenryIK
+# EzyIK
 IK Plugin For Unity
