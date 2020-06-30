@@ -1256,7 +1256,7 @@ Animation:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1336125430}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Animation: {fileID: 7400000, guid: 09a20de5b707777439e245f2bb0b9721, type: 2}
   m_Animations:
@@ -1557,7 +1557,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
       propertyPath: visualiserScale
-      value: 1.27
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 734213139, guid: fc1e0857f723fac40ab0301a979e8400, type: 3}
       propertyPath: m_Enabled
